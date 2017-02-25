@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 from django.contrib import admin
-from django.views.generic.base import TemplateView
+
+from .views import IndexView, QuizView
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^quiz/(?P<quiz_id>\d+)/$', QuizView.as_view(), name='quiz'),
     url(r'^admin/', admin.site.urls),
 ]

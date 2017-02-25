@@ -27,7 +27,7 @@ class Category(models.Model):
 
 class Nominee(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category)
+    category = models.ForeignKey(Category, related_name='nominees')
     is_winner = models.BooleanField(default=False)
 
     class Meta:
@@ -40,6 +40,7 @@ class Nominee(models.Model):
 class Player(models.Model):
     name = models.CharField(max_length=255)
     quiz = models.ForeignKey(Quiz, related_name='players')
+    score = models.IntegerField(default=0)
 
     class Meta:
         ordering = ('name', 'quiz__name')

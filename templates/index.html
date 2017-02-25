@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>TEST</h1>
+    <h1>Quiz list</h1>
+
+    <p class="lead">Please select your Oscar quiz:</p>
+    <ul>
+    {% for quiz in quizzes %}
+        <li><a href="{% url 'quiz' quiz_id=quiz.id %}">{{ quiz.name }}</a></li>
+    {% endfor %}
+    </ul>
 {% endblock %}
