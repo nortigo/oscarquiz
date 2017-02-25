@@ -10,12 +10,16 @@ register = template.Library()
 def display_answer(player, category):
     try:
         answer = Answer.objects.get(player=player, category=category)
-        if answer.nominee.is_winner:
-            return format_html(
-                '{} <span class="glyphicon glyphicon-star text-success"></span>',
-                answer.nominee.name)
-        else:
+
+        if not answer.nominee:
+            return '-'
+
+        if answer.nominee.is_winner is False:
             return answer.nominee.name
+
+        return format_html(
+            '{} <span class="glyphicon glyphicon-star text-success"></span>',
+            answer.nominee.name)
     except Answer.DoesNotExist:
         return '-'
 

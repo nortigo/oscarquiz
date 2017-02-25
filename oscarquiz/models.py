@@ -52,7 +52,7 @@ class Player(models.Model):
 class Answer(models.Model):
     player = models.ForeignKey(Player, related_name='player_anwers')
     category = models.ForeignKey(Category, related_name='category_answers')
-    nominee = models.ForeignKey(Nominee, related_name='nominee_answers')
+    nominee = models.ForeignKey(Nominee, null=True, blank=True, related_name='nominee_answers')
 
     class Meta:
         unique_together = ('player', 'category')
