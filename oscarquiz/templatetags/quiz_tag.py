@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.utils.html import format_html
-from oscarquiz.models import Answer
+from oscarquiz.models import Answer, Category
 
 register = template.Library()
 
@@ -18,3 +18,12 @@ def display_answer(player, category):
             return answer.nominee.name
     except Answer.DoesNotExist:
         return '-'
+
+
+@register.simple_tag
+def category_name(category_id):
+    try:
+        category = Category.objects.get(id=category_id)
+        return category.name
+    except Category.DoesNotExist:
+        return ''

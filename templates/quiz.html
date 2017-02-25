@@ -2,36 +2,49 @@
 {% load quiz_tag %}
 
 {% block content %}
-    <h1>{{ quiz.name }}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>{{ quiz.name }}</h1>
+                <div class="well well-sm">
+                    <a href="{% url 'index' %}">Back to the home page</a>
+                </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nominees</th>
+                <form role="form" action="" method="POST">
+                    {% csrf_token %}
 
-            {% for player in quiz.players.all %}
-                <th>{{ player.name }}</th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-            {% for category in quiz.categories.all %}
-                <tr>
-                    <td>{{ category.name }}</td>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Your answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form in answer_formset %}
+                                <tr>
+                                    <td>{% category_name form.category.value %}</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <select id="{{ form.nominee.auto_id }}" name="{{ form.nominee.html_name }}" class="form-control">
+                                                {% for x, y in form.fields.nominee.choices %}
+                                                    <option value="{{ x }}" {% if form.fields.nominee.value == x %}selected{% endif %}>{{ y }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
-                    {% for player in quiz.players.all %}
-                        <td>{% display_answer player category %}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>Score</td>
-                {% for player in quiz.players.all %}
-                    <td>{{ player.score }}</td>
-                {% endfor %}
-            </tr>
-        </tfoot>
-    </table>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Save quiz</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
