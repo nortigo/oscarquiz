@@ -50,6 +50,24 @@ class Player(models.Model):
     user = models.ForeignKey(User)
     quiz = models.ForeignKey(Quiz, related_name='players')
 
+    class Meta:
+        ordering = ('user__username', 'quiz__name')
+
+    def __str__(self):
+        return self.user.get_full_name()
+
 
 class Answer(models.Model):
-    player = models.ForeignKey(Player, related_name='players')
+    player = models.ForeignKey(Player, related_name='player_anwers')
+    category = models.ForeignKey(Category, related_name='category_answers')
+    nominee = models.ForeignKey(Nominee, related_name='nominee_answers')
+
+    class Meta:
+        unique_together = ('player', 'category')
+        ordering = ('player__user__username', 'category__name')
+
+    def __str__(self):
+        return '%s: %s (%s)' % (
+            self.player.user.get_full_name(),
+            self.nominee.name,
+            self.category.name)
