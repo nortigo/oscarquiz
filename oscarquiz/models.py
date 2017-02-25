@@ -28,6 +28,7 @@ class Category(models.Model):
 class Nominee(models.Model):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category)
+    is_winner = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name', )
