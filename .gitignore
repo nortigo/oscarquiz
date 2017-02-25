@@ -5,3 +5,4 @@
 # -- files
 db.sqlite3
 *.pyc
+local_settings.py
