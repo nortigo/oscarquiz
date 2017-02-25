@@ -9,17 +9,18 @@ register = template.Library()
 @register.simple_tag
 def display_answer(player, category):
     try:
-        answer = Answer.objects.get(player=player, category=category)
+        answer_qs = Answer.objects.select_related('player', 'category', 'nominee')
+        answer_qs = answer_qs.get(player=player, category=category)
 
-        if not answer.nominee:
+        if not answer_qs.nominee:
             return '-'
 
-        if answer.nominee.is_winner is False:
-            return answer.nominee.name
+        if answer_qs.nominee.is_winner is False:
+            return answer_qs.nominee.name
 
         return format_html(
             '{} <span class="glyphicon glyphicon-star text-success"></span>',
-            answer.nominee.name)
+            answer_qs.nominee.name)
     except Answer.DoesNotExist:
         return '-'
 

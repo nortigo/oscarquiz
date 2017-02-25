@@ -61,5 +61,5 @@ class Answer(models.Model):
     def __str__(self):
         return '%s: %s (%s)' % (
             self.player.name,
-            self.nominee.name,
+            self.nominee.name if self.nominee else 'n/a',
             self.category.name)

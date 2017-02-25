@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.forms import formset_factory
 from .models import Quiz, Player
 from .forms import AnswerForm
+from oscarquiz.models import Category
 
 
 class IndexView(TemplateView):
@@ -22,17 +23,35 @@ class QuizView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
-        AnswerFormset = formset_factory(AnswerForm, extra=0)
+        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
         formset = AnswerFormset(initial=[{'player': player, 'category': c}
                                          for c in player.quiz.categories.all()])
 
         return self.render_to_response(context={
             'quiz': player.quiz,
-            'answer_formset': formset
+            'answer_formset': formset,
+            'player_id': kwargs['player_id'],
+            'quiz_id': kwargs['quiz_id'],
         })
 
-    def post(self):
-        answer_formset = formset_factory(AnswerForm)
+    def post(self, request, *args, **kwargs):
+        player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
+        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
+        formset = AnswerFormset(initial=[{'player': player, 'category': c}
+                                         for c in player.quiz.categories.all()],
+                                data=request.POST)
+
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data['nominee']:
+                    form.save()
+
+        return self.render_to_response(context={
+            'quiz': player.quiz,
+            'answer_formset': formset,
+            'player_id': kwargs['player_id'],
+            'quiz_id': kwargs['quiz_id'],
+        })
 
 
 class ResultsView(TemplateView):

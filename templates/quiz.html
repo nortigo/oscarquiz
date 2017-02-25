@@ -10,8 +10,9 @@
                     <a href="{% url 'index' %}">Back to the home page</a>
                 </div>
 
-                <form role="form" action="" method="POST">
+                <form role="form" action="{% url 'quiz' player_id=player_id quiz_id=quiz_id %}" method="POST">
                     {% csrf_token %}
+                    {{ answer_formset.management_form }}
 
                     <table class="table table-hover">
                         <thead>
@@ -23,14 +24,20 @@
                         <tbody>
                             {% for form in answer_formset %}
                                 <tr>
-                                    <td>{% category_name form.category.value %}</td>
+                                    <td>
+                                        {% category_name form.category.value %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    </td>
                                     <td>
                                         <div class="form-group">
                                             <select id="{{ form.nominee.auto_id }}" name="{{ form.nominee.html_name }}" class="form-control">
-                                                {% for x, y in form.fields.nominee.choices %}
-                                                    <option value="{{ x }}" {% if form.fields.nominee.value == x %}selected{% endif %}>{{ y }}</option>
+                                                {% for value, name in form.fields.nominee.choices %}
+                                                    <option value="{{ value }}" {% if form.nominee.initial.id == value %}selected{% endif %}>{{ name }}</option>
                                                 {% endfor %}
                                             </select>
+                                            {{ form.nominee.errors }}
                                         </div>
                                     </td>
                                 </tr>
