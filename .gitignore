@@ -1,0 +1,7 @@
+# -- folders
+/.idea
+
+
+# -- files
+db.sqlite3
+*.pyc
