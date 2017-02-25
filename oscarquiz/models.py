@@ -55,11 +55,11 @@ class Answer(models.Model):
     nominee = models.ForeignKey(Nominee, null=True, blank=True, related_name='nominee_answers')
 
     class Meta:
-        unique_together = ('player', 'category')
+        # unique_together = ('player', 'category')
         ordering = ('player__name', 'category__name')
 
     def __str__(self):
         return '%s: %s (%s)' % (
             self.player.name,
-            self.nominee.name if self.nominee else 'n/a',
+            self.nominee.name if self.nominee else '-',
             self.category.name)

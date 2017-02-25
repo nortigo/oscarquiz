@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.forms import formset_factory
 from .models import Quiz, Player
 from .forms import AnswerForm
-from oscarquiz.models import Category
+from oscarquiz.models import Category, Answer
 
 
 class IndexView(TemplateView):
@@ -37,21 +38,24 @@ class QuizView(TemplateView):
     def post(self, request, *args, **kwargs):
         player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
         AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
-        formset = AnswerFormset(initial=[{'player': player, 'category': c}
-                                         for c in player.quiz.categories.all()],
-                                data=request.POST)
+        initial = [{'player': player, 'category': category}
+                   for category in player.quiz.categories.all()]
+
+        formset = AnswerFormset(initial=initial, data=request.POST)
 
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data['nominee']:
-                    form.save()
+                    Answer.objects.update_or_create(
+                        category=form.cleaned_data['category'],
+                        player=form.cleaned_data['player'],
+                        defaults={'nominee': form.cleaned_data['nominee']}
+                    )
 
-        return self.render_to_response(context={
-            'quiz': player.quiz,
-            'answer_formset': formset,
+        return redirect(reverse('quiz', kwargs={
             'player_id': kwargs['player_id'],
-            'quiz_id': kwargs['quiz_id'],
-        })
+            'quiz_id': kwargs['quiz_id']
+        }))
 
 
 class ResultsView(TemplateView):
