@@ -1,37 +1,48 @@
 {% extends 'base.html' %}
 {% load quiz_tag %}
 
+
 {% block content %}
-    <h1>{{ quiz.name }}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>{{ quiz.name }}</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nominees</th>
+                <div class="well well-sm">
+                    <a href="{% url 'index' %}">Back to the home page</a>
+                </div>
 
-            {% for player in quiz.players.all %}
-                <th>{{ player.name }}</th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-            {% for category in quiz.categories.all %}
-                <tr>
-                    <td>{{ category.name }}</td>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nominees</th>
 
-                    {% for player in quiz.players.all %}
-                        <td>{% display_answer player category %}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr class="info">
-                <td>Score</td>
-                {% for player in quiz.players.all %}
-                    <th>{{ player.score }}</th>
-                {% endfor %}
-            </tr>
-        </tfoot>
-    </table>
+                        {% for player in quiz.players.all %}
+                            <th>{{ player.name }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in quiz.categories.all %}
+                            <tr>
+                                <td>{{ category.name }}</td>
+
+                                {% for player in quiz.players.all %}
+                                    <td>{% display_answer player category %}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="info">
+                            <td>Score</td>
+                            {% for player in quiz.players.all %}
+                                <th>{{ player.score }}</th>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
