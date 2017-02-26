@@ -6,6 +6,9 @@
             <div class="col-sm-12">
                 {% for quiz in quizzes %}
                     <h1>{{ quiz.name }}</h1>
+                    <div class="alert alert-info">
+                        Do not click on the name of the other player as you can see their answers. Try not copy other's answers ;)
+                    </div>
                     <p>Click on your name to start the quiz:</p>
                     <ul>
                         {% for player in quiz.players.all %}
