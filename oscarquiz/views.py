@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls.base import reverse
+from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.forms import formset_factory
 from .models import Quiz, Player
@@ -24,6 +26,10 @@ class QuizView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
+
+        if player.quiz.expire_datetime < timezone.now():
+            return HttpResponseForbidden('No more answers allowed')
+
         AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
         formset = AnswerFormset(initial=[{'player': player, 'category': c}
                                          for c in player.quiz.categories.all()])
@@ -37,6 +43,10 @@ class QuizView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
+
+        if player.quiz.expire_datetime < timezone.now():
+            return HttpResponseForbidden('No more answers allowed')
+
         AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
         initial = [{'player': player, 'category': category}
                    for category in player.quiz.categories.all()]

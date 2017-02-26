@@ -4,6 +4,7 @@ from django.db import models
 
 class Quiz(models.Model):
     name = models.CharField(max_length=255)
+    expire_datetime = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ('name', )

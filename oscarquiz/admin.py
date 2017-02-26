@@ -6,6 +6,7 @@ from .models import Quiz, Category, Nominee, Player, Answer
 
 class QuizAdmin(admin.ModelAdmin):
     inlines = [PlayerInline, ]
+    list_display = ('name', 'expire_datetime')
 
 
 class CategoryAdmin(admin.ModelAdmin):
