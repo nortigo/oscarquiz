@@ -15,12 +15,20 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class NomineeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category')
+    search_fields = ('name',)
+    list_display = ('name', 'category', 'is_winner')
     list_filter = ('category', )
+
+    def save_model(self, request, obj, form, change):
+        super(NomineeAdmin, self).save_model(request, obj, form, change)
+
+        for p in Player.objects.filter(quiz=obj.category.quiz):
+            p.score = Answer.objects.filter(nominee__is_winner=True, player=p).count()
+            p.save()
 
 
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'quiz')
+    list_display = ('name', 'quiz', 'score')
     list_filter = ('quiz', )
 
 
