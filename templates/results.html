@@ -25,9 +25,9 @@
                     <tbody>
                         {% for category in quiz.categories.all %}
                             <tr>
-                                <td>{{ category.name }}{% if category.winners %}<br>
+                                <td><b>{{ category.name }}</b>{% if category.winners %}<br>
                                     {% for nominee in category.winners %}
-                                        <i>{{ nominee.name }}</i>
+                                        <i class="small">{{ nominee.name }}</i>
                                     {% endfor %}{% endif %}</td>
 
                                 {% for player in quiz.players.all %}
