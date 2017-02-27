@@ -30,6 +30,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def winners(self):
+        return self.objects.filter(nominee__is_winner=True)
+
 
 class Nominee(models.Model):
     name = models.CharField(max_length=255)
