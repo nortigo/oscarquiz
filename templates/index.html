@@ -6,15 +6,20 @@
             <div class="col-sm-12">
                 {% for quiz in quizzes %}
                     <h1>{{ quiz.name }}</h1>
-                    <div class="alert alert-info">
-                        Do not click on the name of the other player as you can see their answers. Try not copy other's answers ;)
-                    </div>
-                    <p>Click on your name to start the quiz:</p>
-                    <ul>
-                        {% for player in quiz.players.all %}
-                            <li><a href="{% url 'quiz' quiz_id=quiz.id player_id=player.id %}">{{ player.name }}</a></li>
-                        {% endfor %}
-                    </ul>
+                    {% if quiz.is_past_due %}
+                        <div class="alert alert-danger">Answers are not allowed anymore.</div>
+                        <p>Click here to see the results: <a href="{% url 'results' quiz_id=quiz.id %}">{{ quiz.name }} results</a></p>
+                    {% else %}
+                        <div class="alert alert-info">
+                            Do not click on the name of the other player as you can see their answers. Try not copy other's answers ;)
+                        </div>
+                        <p>Click on your name to start the quiz:</p>
+                        <ul>
+                            {% for player in quiz.players.all %}
+                                <li><a href="{% url 'quiz' quiz_id=quiz.id player_id=player.id %}">{{ player.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

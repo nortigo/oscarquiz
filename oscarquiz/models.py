@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.utils import timezone
 
 
 class Quiz(models.Model):
@@ -12,6 +13,10 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_past_due(self):
+        return timezone.now() > self.expire_datetime
 
 
 class Category(models.Model):
