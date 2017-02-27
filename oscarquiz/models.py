@@ -31,7 +31,7 @@ class Category(models.Model):
         return self.name
 
     def winners(self):
-        return self.objects.filter(nominee__is_winner=True)
+        return self.nominees.filter(is_winner=True)
 
 
 class Nominee(models.Model):
