@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
+from django.urls import path
 from django.contrib import admin
+from oscarquiz.views import IndexView, QuizView, ResultsView
 
-from .views import IndexView, QuizView, ResultsView
 
 urlpatterns = [
-    url(r'^$', IndexView.as_view(), name='index'),
-    url(r'^quiz/(?P<quiz_id>\d+)/(?P<player_id>\d+)/$', QuizView.as_view(), name='quiz'),
-    url(r'^results/(?P<quiz_id>\d+)/$', ResultsView.as_view(), name='results'),
-    url(r'^admin/', admin.site.urls),
+    path('', IndexView.as_view(), name='index'),
+    path('quiz/<int:quiz_id>/<int:player_id>/', QuizView.as_view(), name='quiz'),
+    path('results/<int:quiz_id>/', ResultsView.as_view(), name='results'),
+    path('admin/', admin.site.urls),
 ]

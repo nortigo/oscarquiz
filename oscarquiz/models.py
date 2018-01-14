@@ -20,7 +20,10 @@ class Quiz(models.Model):
 
 
 class Category(models.Model):
-    quiz = models.ForeignKey(Quiz, related_name='categories')
+    quiz = models.ForeignKey(
+        Quiz,
+        related_name='categories',
+        on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
     class Meta:
@@ -36,7 +39,10 @@ class Category(models.Model):
 
 class Nominee(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, related_name='nominees')
+    category = models.ForeignKey(
+        Category,
+        related_name='nominees',
+        on_delete=models.CASCADE)
     is_winner = models.BooleanField(default=False)
 
     class Meta:
@@ -48,7 +54,10 @@ class Nominee(models.Model):
 
 class Player(models.Model):
     name = models.CharField(max_length=255)
-    quiz = models.ForeignKey(Quiz, related_name='players')
+    quiz = models.ForeignKey(
+        Quiz,
+        related_name='players',
+        on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
 
     class Meta:
@@ -59,9 +68,19 @@ class Player(models.Model):
 
 
 class Answer(models.Model):
-    player = models.ForeignKey(Player, related_name='player_anwers')
-    category = models.ForeignKey(Category, related_name='category_answers')
-    nominee = models.ForeignKey(Nominee, null=True, blank=True, related_name='nominee_answers')
+    player = models.ForeignKey(
+        Player,
+        related_name='player_anwers',
+        on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category,
+        related_name='category_answers',
+        on_delete=models.CASCADE)
+    nominee = models.ForeignKey(
+        Nominee,
+        null=True, blank=True,
+        related_name='nominee_answers',
+        on_delete=models.CASCADE)
 
     class Meta:
         # unique_together = ('player', 'category')
