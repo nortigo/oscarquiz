@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* Python 3
-* Django 1.10.5
+* Python 3+
+* Django 2+
 * Database of your choice :)
 
