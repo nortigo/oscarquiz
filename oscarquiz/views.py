@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
-from django.urls.base import reverse
 from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.forms import formset_factory
-from oscarquiz.models import Quiz, Player, Category, Answer
+from oscarquiz.models import Quiz, QuizPlayer, Answer
 from oscarquiz.forms import AnswerForm
+from oscarquiz.constants import CATEGORIES
 
 
 class IndexView(TemplateView):
@@ -14,9 +14,7 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context.update({
-            'quizzes': Quiz.objects.all()
-        })
+        context['quizzes'] = Quiz.objects.all()
         return self.render_to_response(context=context)
 
 
@@ -24,31 +22,36 @@ class QuizView(TemplateView):
     template_name = 'quiz.html'
 
     def get(self, request, *args, **kwargs):
-        player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
+        context = self.get_context_data(**kwargs)
+        identifier = kwargs.get('identifier')
 
-        if player.quiz.expire_datetime < timezone.now():
+        quiz_player = get_object_or_404(
+            QuizPlayer,
+            identifier=identifier)
+
+        if quiz_player.quiz.expire_datetime < timezone.now():
             return HttpResponseForbidden('No more answers allowed')
 
-        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
-        formset = AnswerFormset(initial=[{'player': player, 'category': c}
-                                         for c in player.quiz.categories.all()])
+        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=len(CATEGORIES))
+        formset = AnswerFormset(initial=[{'player': quiz_player.player, 'category': category}
+                                         for category, _ in CATEGORIES])
 
-        return self.render_to_response(context={
-            'quiz': player.quiz,
-            'answer_formset': formset,
-            'player_id': kwargs['player_id'],
-            'quiz_id': kwargs['quiz_id'],
-        })
+        context['quiz'] = quiz_player.quiz
+        context['answer_formset'] = formset
+        return self.render_to_response(context=context)
 
     def post(self, request, *args, **kwargs):
-        player = get_object_or_404(Player, id=kwargs['player_id'], quiz_id=kwargs['quiz_id'])
+        identifier = kwargs.get('identifier')
+        quiz_player = get_object_or_404(
+            QuizPlayer,
+            identifier=identifier)
 
-        if player.quiz.expire_datetime < timezone.now():
+        if quiz_player.quiz.is_past_due:
             return HttpResponseForbidden('No more answers allowed')
 
-        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=Category.objects.all().count())
-        initial = [{'player': player, 'category': category}
-                   for category in player.quiz.categories.all()]
+        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=len(CATEGORIES))
+        initial = [{'player': quiz_player.player, 'category': category}
+                   for category, _ in CATEGORIES]
 
         formset = AnswerFormset(initial=initial, data=request.POST)
 
@@ -56,15 +59,14 @@ class QuizView(TemplateView):
             for form in formset:
                 if form.cleaned_data['nominee']:
                     Answer.objects.update_or_create(
-                        category=form.cleaned_data['category'],
                         player=form.cleaned_data['player'],
                         defaults={'nominee': form.cleaned_data['nominee']}
                     )
+        else:
+            print(formset.errors)
+            raise Exception
 
-        return redirect(reverse('quiz', kwargs={
-            'player_id': kwargs['player_id'],
-            'quiz_id': kwargs['quiz_id']
-        }))
+        return redirect(quiz_player.get_absolute_url())
 
 
 class ResultsView(TemplateView):
@@ -72,5 +74,8 @@ class ResultsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response(context={
-            'quiz': get_object_or_404(Quiz, id=kwargs['quiz_id'])
+            'categories': CATEGORIES,
+            'quiz_players': QuizPlayer.objects.filter(
+                quiz=get_object_or_404(Quiz, id=kwargs['quiz_id'])
+            ).order_by('quiz_id', 'player__name')
         })

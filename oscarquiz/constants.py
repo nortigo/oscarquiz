@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+
+CATEGORIES = (
+    ('LEADING_ACTOR', 'Actor in a Leading Role'),
+    ('SUPPORTING_ACTOR', 'Actor in a Supporting Role'),
+    ('LEADING_ACTRESS', 'Actress in a Leading Role'),
+    ('SUPPORTING_ACTRESS', 'Actress in a Supporting Role'),
+    ('ANIMATED_FEATURE_FILM', 'Animated Feature Film'),
+    ('ANIMATED_SHORT_FILM', 'Animated Short Film'),
+    ('BEST_PICTURE', 'Best Picture'),
+    ('CINEMATOGRAPHY', 'Cinematography'),
+    ('COSTUME_DESIGN', 'Costume Design'),
+    ('DIRECTING', 'Directing'),
+    ('DOCUMENTARY_FEATURE', 'Documentary (Feature)'),
+    ('DOCUMENTARY_SHORT_SUBJECT', 'Documentary (Short Subject)'),
+    ('FILM_EDITING', 'Film Editing'),
+    ('FOREIGN_LANGUAGE_FILM', 'Foreign Language Film'),
+    ('LIVE_ACTION_SHORT_FILM', 'Live Action Short Film'),
+    ('MAKEUP_AND_HAIRSTYLING', 'Makeup and Hairstyling'),
+    ('MUSIC_ORIGINAL_SCORE', 'Music (Original Score)'),
+    ('MUSIC_ORIGINAL_SONG', 'Music (Original Song)'),
+    ('PRODUCTION_DESIGN', 'Production Design'),
+    ('SOUND_EDITING', 'Sound Editing'),
+    ('SOUND_MIXING', 'Sound Mixing'),
+    ('VISUAL_EFFECTS', 'Visual Effects'),
+    ('WRITING_ADAPTED_SCREENPLAY', 'Writing (Adapted Screenplay)'),
+    ('WRITING_ORIGINAL_SCREENPLAY', 'Writing (Original Screenplay)'),
+)

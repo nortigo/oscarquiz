@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import template
 from django.utils.html import format_html
-from oscarquiz.models import Answer, Category
+from oscarquiz.constants import CATEGORIES
+from oscarquiz.models import Answer
 
 register = template.Library()
 
@@ -9,8 +10,8 @@ register = template.Library()
 @register.simple_tag
 def display_answer(player, category):
     try:
-        answer_qs = Answer.objects.select_related('player', 'category', 'nominee')
-        answer_qs = answer_qs.get(player=player, category=category)
+        answer_qs = Answer.objects.select_related('player', 'nominee')
+        answer_qs = answer_qs.get(player=player, nominee__category=category)
 
         if not answer_qs.nominee:
             return '-'
@@ -27,9 +28,8 @@ def display_answer(player, category):
 
 
 @register.simple_tag
-def category_name(category_id):
+def category_name(category):
     try:
-        category = Category.objects.get(id=category_id)
-        return category.name
-    except Category.DoesNotExist:
+        return dict(CATEGORIES)[category]
+    except KeyError:
         return ''

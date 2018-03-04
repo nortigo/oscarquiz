@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
+import uuid
+
 from django.db import models
+from django.urls.base import reverse
 from django.utils import timezone
+from oscarquiz.constants import CATEGORIES
 
 
 class Quiz(models.Model):
     name = models.CharField(max_length=255)
     expire_datetime = models.DateTimeField(null=True, blank=True)
+    players = models.ManyToManyField('Player', through='QuizPlayer')
 
     class Meta:
         ordering = ('name', )
@@ -19,62 +24,60 @@ class Quiz(models.Model):
         return timezone.now() > self.expire_datetime
 
 
-class Category(models.Model):
-    quiz = models.ForeignKey(
-        Quiz,
-        related_name='categories',
-        on_delete=models.CASCADE)
+class Player(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
         ordering = ('name', )
-        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
 
-    def winners(self):
-        return self.nominees.filter(is_winner=True)
+
+class QuizPlayer(models.Model):
+    identifier = models.UUIDField(default=uuid.uuid4)
+    quiz = models.ForeignKey(Quiz, related_name='quiz_qp', on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, related_name='player_qp', on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ('quiz__name', 'player__name')
+        unique_together = ('quiz', 'player')
+
+    def __str__(self):
+        return '{}: {}'.format(self.quiz, self.player)
+
+    def get_absolute_url(self):
+        return reverse('quiz', kwargs={
+            'identifier': self.identifier,
+        })
 
 
 class Nominee(models.Model):
+    oscar_quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    category = models.CharField(
+        max_length=255,
+        choices=CATEGORIES
+    )
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(
-        Category,
-        related_name='nominees',
-        on_delete=models.CASCADE)
     is_winner = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name', )
+        unique_together = ('oscar_quiz', 'category', 'name')
 
     def __str__(self):
         return self.name
 
-
-class Player(models.Model):
-    name = models.CharField(max_length=255)
-    quiz = models.ForeignKey(
-        Quiz,
-        related_name='players',
-        on_delete=models.CASCADE)
-    score = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ('name', 'quiz__name')
-
-    def __str__(self):
-        return self.name
+    @property
+    def category_label(self):
+        return dict(CATEGORIES)[self.category]
 
 
 class Answer(models.Model):
     player = models.ForeignKey(
         Player,
         related_name='player_anwers',
-        on_delete=models.CASCADE)
-    category = models.ForeignKey(
-        Category,
-        related_name='category_answers',
         on_delete=models.CASCADE)
     nominee = models.ForeignKey(
         Nominee,
@@ -83,11 +86,14 @@ class Answer(models.Model):
         on_delete=models.CASCADE)
 
     class Meta:
-        # unique_together = ('player', 'category')
-        ordering = ('player__name', 'category__name')
+        ordering = ('player__name', 'nominee__category')
 
     def __str__(self):
         return '%s: %s (%s)' % (
             self.player.name,
             self.nominee.name if self.nominee else '-',
-            self.category.name)
+            self.nominee.category_label)
+
+    @property
+    def category(self):
+        return self.nominee.category

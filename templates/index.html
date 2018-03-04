@@ -10,15 +10,16 @@
                         <div class="alert alert-danger">Answers are not allowed anymore.</div>
                         <p>Click here to see the results: <a href="{% url 'results' quiz_id=quiz.id %}">{{ quiz.name }} results</a></p>
                     {% else %}
-                        <div class="alert alert-info">
-                            Do not click on the name of the other player as you can see their answers. Try not to copy other's answers ;)
-                        </div>
-                        <p>Click on your name to start the quiz:</p>
-                        <ul>
-                            {% for player in quiz.players.all %}
-                                <li><a href="{% url 'quiz' quiz_id=quiz.id player_id=player.id %}">{{ player.name }}</a></li>
-                            {% endfor %}
-                        </ul>
+                        {% if request.user and request.user.is_superuser %}
+                            <p>List of players</p>
+                            <ul>
+                                {% for quiz_player in quiz.quiz_qp.all %}
+                                    <li><a href="{{ quiz_player.get_absolute_url }}">{{ quiz_player.player.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="alert alert-info">Results are not available yet. Please wait the deadline : {{ quiz.expire_datetime|date:'Y-d-m, P' }}</div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>

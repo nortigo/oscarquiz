@@ -11,7 +11,7 @@
                     <a href="{% url 'index' %}">Back to the home page</a>
                 </div>
 
-                <form role="form" action="{% url 'quiz' player_id=player_id quiz_id=quiz_id %}" method="POST">
+                <form role="form" action="{{ request.path }}" method="POST">
                     {% csrf_token %}
                     {{ answer_formset.management_form }}
 

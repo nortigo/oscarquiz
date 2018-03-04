@@ -17,21 +17,18 @@
                     <tr>
                         <th>Nominees</th>
 
-                        {% for player in quiz.players.all %}
-                            <th>{{ player.name }}</th>
+                        {% for quiz_player in quiz_players %}
+                            <th>{{ quiz_player.player.name }}</th>
                         {% endfor %}
                     </tr>
                     </thead>
                     <tbody>
-                        {% for category in quiz.categories.all %}
+                        {% for category, category_label in categories %}
                             <tr>
-                                <td><b>{{ category.name }}</b>{% if category.winners %}<br>
-                                    {% for nominee in category.winners %}
-                                        <i class="small">{{ nominee.name }}</i>
-                                    {% endfor %}{% endif %}</td>
+                                <td><b>{{category_label }}</b></td>
 
-                                {% for player in quiz.players.all %}
-                                    <td>{% display_answer player category %}</td>
+                                {% for quiz_player in quiz_players %}
+                                    <td>{% display_answer quiz_player.player category %}</td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
@@ -39,8 +36,8 @@
                     <tfoot>
                         <tr class="info">
                             <td>Score</td>
-                            {% for player in quiz.players.all %}
-                                <th>{{ player.score }}</th>
+                            {% for quiz_player in quiz_players %}
+                                <th>{{ quiz_player.score }}</th>
                             {% endfor %}
                         </tr>
                     </tfoot>
