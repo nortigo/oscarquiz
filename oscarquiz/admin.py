@@ -4,17 +4,20 @@ from oscarquiz.inlines import NomineeInline, PlayerInline
 from oscarquiz.models import Quiz, Category, Nominee, Player, Answer
 
 
+@admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
     inlines = [PlayerInline, ]
     list_display = ('name', 'expire_datetime')
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [NomineeInline, ]
     list_display = ('name', 'quiz')
     list_filter = ('quiz', )
 
 
+@admin.register(Nominee)
 class NomineeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_display = ('name', 'category', 'is_winner')
@@ -28,18 +31,13 @@ class NomineeAdmin(admin.ModelAdmin):
             p.save()
 
 
+@admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ('name', 'quiz', 'score')
     list_filter = ('quiz', )
 
 
+@admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('player', 'category', 'nominee')
     list_filter = ('player', 'category', )
-
-
-admin.site.register(Quiz, QuizAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Nominee, NomineeAdmin)
-admin.site.register(Player, PlayerAdmin)
-admin.site.register(Answer, AnswerAdmin)
