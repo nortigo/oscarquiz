@@ -5,9 +5,8 @@ from django.urls.base import reverse
 from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.forms import formset_factory
-from .models import Quiz, Player
-from .forms import AnswerForm
-from oscarquiz.models import Category, Answer
+from oscarquiz.models import Quiz, Player, Category, Answer
+from oscarquiz.forms import AnswerForm
 
 
 class IndexView(TemplateView):

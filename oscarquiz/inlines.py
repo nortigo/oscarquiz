@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.admin.options import StackedInline
-from .models import Nominee
-from oscarquiz.models import Player
+from oscarquiz.models import Nominee, Player
 
 
 class PlayerInline(StackedInline):

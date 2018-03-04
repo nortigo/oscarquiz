@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'oym(67=_*-&3-$$7axtsaa@-kg@3mil@n@g&a2afjns(b-b0er'
 DEBUG = False
 ALLOWED_HOSTS = []
-ROOT_URLCONF = 'oscarquiz.urls'
-WSGI_APPLICATION = 'oscarquiz.wsgi.application'
+ROOT_URLCONF = 'urls'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # -----------------------------------------------------------------
@@ -88,10 +88,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 # -----------------------------------------------------------------
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'America/New_York'
-USE_I18N = True
-USE_L10N = True
+USE_I18N = False
+USE_L10N = False
 USE_TZ = True
 
 
@@ -102,14 +102,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '_static')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "oscarquiz/static"),
+    os.path.join(BASE_DIR, "static"),
 )
-
-
-# ---------------------------------------------------
-# Local settings
-# ---------------------------------------------------
-try:
-    from oscarquiz.local_settings import *
-except ImportError:
-    pass

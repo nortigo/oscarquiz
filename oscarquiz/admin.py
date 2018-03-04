@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from .inlines import NomineeInline, PlayerInline
-from .models import Quiz, Category, Nominee, Player, Answer
+from oscarquiz.inlines import NomineeInline, PlayerInline
+from oscarquiz.models import Quiz, Category, Nominee, Player, Answer
 
 
 class QuizAdmin(admin.ModelAdmin):
