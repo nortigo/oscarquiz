@@ -8,6 +8,12 @@
 
 ## Changelog
 
+2018-06-05:
+
+* Replace self-hosted bootstrap to CDN
+* Update bootstrap to latest version
+* Update HTML to fit new bootstrap version
+
 2018-03-03:
 
 * create unique link to send to players

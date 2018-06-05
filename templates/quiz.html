@@ -7,16 +7,18 @@
             <div class="col-sm-12">
                 <h1>{{ quiz.name }}</h1>
 
-                <div class="well well-sm">
-                    <a href="{% url 'index' %}">Back to the home page</a>
-                </div>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'index' %}">Back to the home page</a>
+                    </li>
+                </ul>
 
                 <form role="form" action="{{ request.path }}" method="POST">
                     {% csrf_token %}
                     {{ answer_formset.management_form }}
 
                     <table class="table table-hover">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Category</th>
                                 <th>Your answer</th>

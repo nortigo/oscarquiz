@@ -73,9 +73,12 @@ class ResultsView(TemplateView):
     template_name = 'results.html'
 
     def get(self, request, *args, **kwargs):
+        quiz = get_object_or_404(Quiz, id=kwargs['quiz_id'])
+
         return self.render_to_response(context={
             'categories': CATEGORIES,
+            'quiz': quiz,
             'quiz_players': QuizPlayer.objects.filter(
-                quiz=get_object_or_404(Quiz, id=kwargs['quiz_id'])
+                quiz=quiz
             ).order_by('quiz_id', 'player__name')
         })
