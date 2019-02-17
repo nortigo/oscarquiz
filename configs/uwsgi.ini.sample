@@ -27,3 +27,11 @@ vacuum          = true
 
 logto           = /tmp/%(project_name).log
 pidfile         = /tmp/%(project_name).pid
+
+
+# global settings
+env=OQ_SECRET_KEY=
+env=OQ_DB_NAME=
+env=OQ_DB_USER=
+env=OQ_DB_PASS=
+env=OQ_DB_HOST=

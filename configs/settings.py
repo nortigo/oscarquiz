@@ -5,7 +5,7 @@ import os
 # General settings
 # -----------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = 'oym(67=_*-&3-$$7axtsaa@-kg@3mil@n@g&a2afjns(b-b0er'
+SECRET_KEY = os.environ['OQ_SECRET_KEY']
 DEBUG = False
 ALLOWED_HOSTS = []
 ROOT_URLCONF = 'urls'
@@ -67,9 +67,13 @@ TEMPLATES = [
 # -----------------------------------------------------------------
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['OQ_DB_NAME'],
+        'USER': os.environ['OQ_DB_USER'],
+        'PASSWORD': os.environ['OQ_DB_PASS'],
+        'HOST': os.environ['OQ_DB_HOST'],
+        'PORT': '5432',
+    },
 }
 
 

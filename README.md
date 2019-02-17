@@ -6,7 +6,21 @@
 * Django 2+
 * Database of your choice :)
 
+## Setup
+
+Go to `configs/`
+
+1. Copy `project.env.sample` to `project.env`
+1. Edit `project.env` and add your own credential
+1. Copy `uwsgi.ini.sample` to `uwsgi.ini`
+1. Edit `uwsgi.ini` and add the same credential from `project.env`
+
 ## Changelog
+
+2019-02-17:
+
+* Update requirements
+* Remove SECRET_KEY from settings
 
 2018-06-05:
 
