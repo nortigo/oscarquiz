@@ -58,7 +58,10 @@ class QuizView(TemplateView):
                     'category': category
                 })
 
-        formset = AnswerFormset(initial=initial)
+        formset = AnswerFormset(
+            queryset=Answer.objects.filter(player=quiz_player.player),
+            initial=initial
+        )
 
         context['quiz'] = quiz_player.quiz
         context['answer_formset'] = formset
@@ -98,7 +101,11 @@ class QuizView(TemplateView):
                     'category': category
                 })
 
-        formset = AnswerFormset(initial=initial, data=request.POST)
+        formset = AnswerFormset(
+            queryset=Answer.objects.filter(player=quiz_player.player),
+            initial=initial,
+            data=request.POST
+        )
 
         if formset.is_valid():
             formset.save()
