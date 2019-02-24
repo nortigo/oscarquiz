@@ -33,8 +33,10 @@ class QuizView(TemplateView):
         if quiz_player.quiz.expire_datetime < timezone.now():
             return HttpResponseForbidden('No more answers allowed')
 
+        player = quiz_player.player
+        answer_queryset = Answer.objects
         category_count = len(CATEGORIES)
-        answer_count = Answer.objects.filter(player=quiz_player.player).count()
+        answer_count = answer_queryset.filter(player=player).count()
         extra_field_count = category_count - answer_count
 
         AnswerFormset = modelformset_factory(
@@ -48,18 +50,18 @@ class QuizView(TemplateView):
 
         for category, _ in CATEGORIES:
             try:
-                Answer.objects.get(
-                    player=quiz_player.player,
+                answer_queryset.get(
+                    player=player,
                     category=category
                 )
             except Answer.DoesNotExist:
                 initial.append({
-                    'player': quiz_player.player,
+                    'player': player,
                     'category': category
                 })
 
         formset = AnswerFormset(
-            queryset=Answer.objects.filter(player=quiz_player.player),
+            queryset=answer_queryset.filter(player=player),
             initial=initial
         )
 
@@ -76,8 +78,10 @@ class QuizView(TemplateView):
         if quiz_player.quiz.is_past_due:
             return HttpResponseForbidden('No more answers allowed')
 
+        player = quiz_player.player
+        answer_queryset = Answer.objects
         category_count = len(CATEGORIES)
-        answer_count = Answer.objects.filter(player=quiz_player.player).count()
+        answer_count = answer_queryset.filter(player=player).count()
         extra_field_count = category_count - answer_count
 
         AnswerFormset = modelformset_factory(
@@ -91,18 +95,18 @@ class QuizView(TemplateView):
 
         for category, _ in CATEGORIES:
             try:
-                Answer.objects.get(
-                    player=quiz_player.player,
+                answer_queryset.get(
+                    player=player,
                     category=category
                 )
             except Answer.DoesNotExist:
                 initial.append({
-                    'player': quiz_player.player,
+                    'player': player,
                     'category': category
                 })
 
         formset = AnswerFormset(
-            queryset=Answer.objects.filter(player=quiz_player.player),
+            queryset=answer_queryset.filter(player=player),
             initial=initial,
             data=request.POST
         )
