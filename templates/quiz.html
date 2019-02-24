@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col">
                 <h1>{{ quiz.name }}</h1>
 
                 <ul class="nav">
@@ -29,15 +29,15 @@
                                 <tr>
                                     <td>
                                         {% category_name form.category.value %}
+                                    </td>
+                                    <td>
                                         {% for hidden in form.hidden_fields %}
                                             {{ hidden }}
                                         {% endfor %}
-                                    </td>
-                                    <td>
                                         <div class="form-group">
                                             <select id="{{ form.nominee.auto_id }}" name="{{ form.nominee.html_name }}" class="form-control">
                                                 {% for value, name in form.fields.nominee.choices %}
-                                                    <option value="{{ value }}" {% if form.nominee.initial.id == value %}selected{% endif %}>{{ name }}</option>
+                                                    <option value="{{ value }}" {% if form.instance.nominee.id == value %}selected{% endif %}>{{ name }}</option>
                                                 {% endfor %}
                                             </select>
                                             {{ form.nominee.errors }}
@@ -49,7 +49,7 @@
                     </table>
 
                     <div class="form-group">
-                        <div class="col-sm-12 text-center">
+                        <div class="col text-center">
                             <button type="submit" class="btn btn-primary btn-lg">Save quiz</button>
                         </div>
                     </div>

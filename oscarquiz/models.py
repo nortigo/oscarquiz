@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import uuid
-
 from django.db import models
 from django.urls.base import reverse
 from django.utils import timezone
@@ -79,6 +78,10 @@ class Answer(models.Model):
         Player,
         related_name='player_anwers',
         on_delete=models.CASCADE)
+    category = models.CharField(
+        max_length=255,
+        choices=CATEGORIES
+    )
     nominee = models.ForeignKey(
         Nominee,
         null=True, blank=True,
@@ -87,13 +90,14 @@ class Answer(models.Model):
 
     class Meta:
         ordering = ('player__name', 'nominee__category')
+        unique_together = ('player', 'category')
 
     def __str__(self):
-        return '%s: %s (%s)' % (
+        return '{}: {} ({})'.format(
             self.player.name,
             self.nominee.name if self.nominee else '-',
-            self.nominee.category_label)
+            self.category_label)
 
     @property
-    def category(self):
-        return self.nominee.category
+    def category_label(self):
+        return dict(CATEGORIES)[self.category]

@@ -21,19 +21,23 @@ class NomineeAdmin(admin.ModelAdmin):
     list_filter = ('oscar_quiz', 'category', 'is_winner')
 
     def save_model(self, request, obj, form, change):
-        super(NomineeAdmin, self).save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
+        answer_queryset = Answer.objects
 
         for qp in QuizPlayer.objects.filter(quiz=obj.oscar_quiz):
-            qp.score = Answer.objects.filter(nominee__is_winner=True, player=qp.player).count()
+            qp.score = answer_queryset.filter(
+                nominee__is_winner=True,
+                player=qp.player
+            ).count()
             qp.save()
 
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('player', 'get_category', 'nominee')
-    list_filter = ('player', 'nominee__category')
+    list_filter = ('player', 'category')
 
     def get_category(self, obj):
-        return obj.nominee.category_label
+        return obj.category_label
     get_category.short_description = 'Category'
-    get_category.admin_order_field = 'nominee__category'
+    get_category.admin_order_field = 'category'

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from django import forms
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic.base import TemplateView
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 from oscarquiz.models import Quiz, QuizPlayer, Answer
 from oscarquiz.forms import AnswerForm
 from oscarquiz.constants import CATEGORIES
@@ -32,9 +33,32 @@ class QuizView(TemplateView):
         if quiz_player.quiz.expire_datetime < timezone.now():
             return HttpResponseForbidden('No more answers allowed')
 
-        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=len(CATEGORIES))
-        formset = AnswerFormset(initial=[{'player': quiz_player.player, 'category': category}
-                                         for category, _ in CATEGORIES])
+        category_count = len(CATEGORIES)
+        answer_count = Answer.objects.filter(player=quiz_player.player).count()
+        extra_field_count = category_count - answer_count
+
+        AnswerFormset = modelformset_factory(
+            Answer,
+            exclude=[],
+            form=AnswerForm,
+            extra=extra_field_count,
+            max_num=category_count
+        )
+        initial = []
+
+        for category, _ in CATEGORIES:
+            try:
+                Answer.objects.get(
+                    player=quiz_player.player,
+                    category=category
+                )
+            except Answer.DoesNotExist:
+                initial.append({
+                    'player': quiz_player.player,
+                    'category': category
+                })
+
+        formset = AnswerFormset(initial=initial)
 
         context['quiz'] = quiz_player.quiz
         context['answer_formset'] = formset
@@ -49,19 +73,35 @@ class QuizView(TemplateView):
         if quiz_player.quiz.is_past_due:
             return HttpResponseForbidden('No more answers allowed')
 
-        AnswerFormset = formset_factory(AnswerForm, extra=0, max_num=len(CATEGORIES))
-        initial = [{'player': quiz_player.player, 'category': category}
-                   for category, _ in CATEGORIES]
+        category_count = len(CATEGORIES)
+        answer_count = Answer.objects.filter(player=quiz_player.player).count()
+        extra_field_count = category_count - answer_count
+
+        AnswerFormset = modelformset_factory(
+            Answer,
+            exclude=[],
+            form=AnswerForm,
+            extra=extra_field_count,
+            max_num=category_count
+        )
+        initial = []
+
+        for category, _ in CATEGORIES:
+            try:
+                Answer.objects.get(
+                    player=quiz_player.player,
+                    category=category
+                )
+            except Answer.DoesNotExist:
+                initial.append({
+                    'player': quiz_player.player,
+                    'category': category
+                })
 
         formset = AnswerFormset(initial=initial, data=request.POST)
 
         if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data['nominee']:
-                    Answer.objects.update_or_create(
-                        player=form.cleaned_data['player'],
-                        defaults={'nominee': form.cleaned_data['nominee']}
-                    )
+            formset.save()
         else:
             print(formset.errors)
             raise Exception
