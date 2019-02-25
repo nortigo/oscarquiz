@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from django import forms
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic.base import TemplateView
-from django.forms import formset_factory, modelformset_factory
+from django.forms import modelformset_factory
 from oscarquiz.models import Quiz, QuizPlayer, Answer
 from oscarquiz.forms import AnswerForm
 from oscarquiz.constants import CATEGORIES
@@ -125,11 +124,12 @@ class ResultsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         quiz = get_object_or_404(Quiz, id=kwargs['quiz_id'])
+        queryset = QuizPlayer.objects.filter(quiz=quiz)
+        ranking = queryset.values('player__name', 'score').order_by('-score')
 
         return self.render_to_response(context={
             'categories': CATEGORIES,
             'quiz': quiz,
-            'quiz_players': QuizPlayer.objects.filter(
-                quiz=quiz
-            ).order_by('quiz_id', 'player__name')
+            'ranking': ranking,
+            'quiz_players': queryset.order_by('quiz_id', 'player__name')
         })

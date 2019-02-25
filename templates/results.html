@@ -14,6 +14,14 @@
                     </li>
                 </ul>
 
+                <h2>Ranking</h2>
+                <ul>
+                    {% for rank in ranking %}
+                        <li>{{ rank.player__name }}: {{ rank.score }} pts</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>Details</h2>
                 <table class="table table-hover table-sm">
                     <thead class="thead-dark">
                     <tr>
