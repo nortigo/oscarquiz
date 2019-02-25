@@ -4,6 +4,7 @@
 {% block postcss %}
     <style type="text/css">
         .ranking { font-size: 20px; }
+        .ranking li:first-child { font-weight: bold; font-size: 28px; color: #056a09; }
         .ranking label { margin: 0; display: inline-block; width: 120px; }
     </style>
 {% endblock %}
@@ -21,11 +22,11 @@
                 </ul>
 
                 <h2>Ranking</h2>
-                <ul class="ranking">
+                <ol class="ranking">
                     {% for rank in ranking %}
                         <li><label>{{ rank.player__name }}:</label> {{ rank.score }} pts</li>
                     {% endfor %}
-                </ul>
+                </ol>
 
                 <h2>Details</h2>
                 <table class="table table-hover table-sm">
