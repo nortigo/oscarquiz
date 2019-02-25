@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load quiz_tag %}
 
+{% block postcss %}
+    <style type="text/css">
+        .ranking { font-size: 20px; }
+        .ranking label { margin: 0; display: inline-block; width: 120px; }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -15,9 +21,9 @@
                 </ul>
 
                 <h2>Ranking</h2>
-                <ul>
+                <ul class="ranking">
                     {% for rank in ranking %}
-                        <li>{{ rank.player__name }}: {{ rank.score }} pts</li>
+                        <li><label>{{ rank.player__name }}:</label> {{ rank.score }} pts</li>
                     {% endfor %}
                 </ul>
 
