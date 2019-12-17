@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
+from configs.utils import load_yml_config
+
+config = load_yml_config(os.environ['OSCARQUIZ_CONFIG'])
+
 
 # -----------------------------------------------------------------
 # General settings
 # -----------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = os.environ['OQ_SECRET_KEY']
+SECRET_KEY = config['base']['secret_key']
 DEBUG = False
 ALLOWED_HOSTS = []
 ROOT_URLCONF = 'urls'
@@ -68,11 +72,11 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['OQ_DB_NAME'],
-        'USER': os.environ['OQ_DB_USER'],
-        'PASSWORD': os.environ['OQ_DB_PASS'],
-        'HOST': os.environ['OQ_DB_HOST'],
-        'PORT': '5432',
+        'NAME': config['database']['name'],
+        'USER': config['database']['user'],
+        'PASSWORD': config['database']['password'],
+        'HOST': config['database']['host'],
+        'PORT': config['database']['port'],
     },
 }
 

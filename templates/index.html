@@ -26,6 +26,10 @@
                             <div class="alert alert-info" role="alert">Results are not available yet. Please wait the deadline : {{ quiz.expire_datetime|date:'Y-d-m, P' }}</div>
                         {% endif %}
                     {% endif %}
+                {% empty %}
+                    <div class="alert alert-warning">
+                        No quiz at the moment
+                    </div>
                 {% endfor %}
             </div>
         </div>

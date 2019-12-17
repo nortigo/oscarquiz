@@ -3,19 +3,31 @@
 ## Requirements
 
 * Python 3+
-* Django 2+
+* Django 3+
 * Database of your choice :)
 
 ## Setup
 
 Go to `configs/`
 
-1. Copy `project.env.sample` to `project.env`
-1. Edit `project.env` and add your own credential
+1. Copy `project_config.yml.sample` to `project_config.yml`
+1. Edit `project_config.yml` and add your own credential
 1. Copy `uwsgi.ini.sample` to `uwsgi.ini`
-1. Edit `uwsgi.ini` and add the same credential from `project.env`
+1. Edit `uwsgi.ini` and set `OSCARQUIZ_CONFIG` path to YML config
+
+## Run project
+
+```bash
+$ OSCARQUIZ_CONFIG=/path/to/yml/configs python manage.py runserver
+```
 
 ## Changelog
+
+2019-12-16:
+
+* Update to Django 3.0
+* Update requirements
+* Update settings
 
 2019-02-17:
 
