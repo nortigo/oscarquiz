@@ -2,7 +2,7 @@
 import os
 from configs.utils import load_yml_config
 
-config = load_yml_config(os.environ['OSCARQUIZ_CONFIG'])
+config = load_yml_config(os.environ.get('OSCARQUIZ_CONFIG', 'configs/project_config.yml'))
 
 
 # -----------------------------------------------------------------

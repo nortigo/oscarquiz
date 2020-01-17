@@ -21,7 +21,19 @@ Go to `configs/`
 $ OSCARQUIZ_CONFIG=/path/to/yml/configs python manage.py runserver
 ```
 
+You can ommit `OSCARQUIZ_CONFIG` If you keep `project_config.yml` in the configs folder.
+
+```bash
+$ python manage.py runserver
+```
+
 ## Changelog
+
+2020-01-17:
+
+* Update to Django 3.0.2
+* Update requirements
+* Update settings
 
 2019-12-16:
 
