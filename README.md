@@ -29,6 +29,10 @@ $ python manage.py runserver
 
 ## Changelog
 
+2020-02-21:
+
+* Update to Django 3.0.3
+
 2020-01-17:
 
 * Update to Django 3.0.2
