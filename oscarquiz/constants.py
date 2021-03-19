@@ -1,28 +1,28 @@
-# -*- coding: utf-8 -*-
+from django.db.models import TextChoices
 
-CATEGORIES = (
-    ('LEADING_ACTOR', 'Actor in a Leading Role'),
-    ('SUPPORTING_ACTOR', 'Actor in a Supporting Role'),
-    ('LEADING_ACTRESS', 'Actress in a Leading Role'),
-    ('SUPPORTING_ACTRESS', 'Actress in a Supporting Role'),
-    ('ANIMATED_FEATURE_FILM', 'Animated Feature Film'),
-    ('ANIMATED_SHORT_FILM', 'Animated Short Film'),
-    ('BEST_PICTURE', 'Best Picture'),
-    ('CINEMATOGRAPHY', 'Cinematography'),
-    ('COSTUME_DESIGN', 'Costume Design'),
-    ('DIRECTING', 'Directing'),
-    ('DOCUMENTARY_FEATURE', 'Documentary (Feature)'),
-    ('DOCUMENTARY_SHORT_SUBJECT', 'Documentary (Short Subject)'),
-    ('FILM_EDITING', 'Film Editing'),
-    ('FOREIGN_LANGUAGE_FILM', 'Foreign Language Film'),
-    ('LIVE_ACTION_SHORT_FILM', 'Live Action Short Film'),
-    ('MAKEUP_AND_HAIRSTYLING', 'Makeup and Hairstyling'),
-    ('MUSIC_ORIGINAL_SCORE', 'Music (Original Score)'),
-    ('MUSIC_ORIGINAL_SONG', 'Music (Original Song)'),
-    ('PRODUCTION_DESIGN', 'Production Design'),
-    ('SOUND_EDITING', 'Sound Editing'),
-    ('SOUND_MIXING', 'Sound Mixing'),
-    ('VISUAL_EFFECTS', 'Visual Effects'),
-    ('WRITING_ADAPTED_SCREENPLAY', 'Writing (Adapted Screenplay)'),
-    ('WRITING_ORIGINAL_SCREENPLAY', 'Writing (Original Screenplay)'),
-)
+
+class Category(TextChoices):
+    LEADING_ACTOR = 'LEADING_ACTOR', 'Actor in a Leading Role'
+    SUPPORTING_ACTOR = 'SUPPORTING_ACTOR', 'Actor in a Supporting Role'
+    LEADING_ACTRESS = 'LEADING_ACTRESS', 'Actress in a Leading Role'
+    SUPPORTING_ACTRESS = 'SUPPORTING_ACTRESS', 'Actress in a Supporting Role'
+    ANIMATED_FEATURE_FILM = 'ANIMATED_FEATURE_FILM', 'Animated Feature Film'
+    ANIMATED_SHORT_FILM = 'ANIMATED_SHORT_FILM', 'Animated Short Film'
+    BEST_PICTURE = 'BEST_PICTURE', 'Best Picture'
+    CINEMATOGRAPHY = 'CINEMATOGRAPHY', 'Cinematography'
+    COSTUME_DESIGN = 'COSTUME_DESIGN', 'Costume Design'
+    DIRECTING = 'DIRECTING', 'Directing'
+    DOCUMENTARY_FEATURE = 'DOCUMENTARY_FEATURE', 'Documentary (Feature)'
+    DOCUMENTARY_SHORT_SUBJECT = 'DOCUMENTARY_SHORT_SUBJECT', 'Documentary (Short Subject)'
+    FILM_EDITING = 'FILM_EDITING', 'Film Editing'
+    FOREIGN_LANGUAGE_FILM = 'FOREIGN_LANGUAGE_FILM', 'Foreign Language Film'
+    LIVE_ACTION_SHORT_FILM = 'LIVE_ACTION_SHORT_FILM', 'Live Action Short Film'
+    MAKEUP_AND_HAIRSTYLING = 'MAKEUP_AND_HAIRSTYLING', 'Makeup and Hairstyling'
+    MUSIC_ORIGINAL_SCORE = 'MUSIC_ORIGINAL_SCORE', 'Music (Original Score)'
+    MUSIC_ORIGINAL_SONG = 'MUSIC_ORIGINAL_SONG', 'Music (Original Song)'
+    PRODUCTION_DESIGN = 'PRODUCTION_DESIGN', 'Production Design'
+    SOUND_EDITING = 'SOUND_EDITING', 'Sound Editing'
+    SOUND_MIXING = 'SOUND_MIXING', 'Sound Mixing'
+    VISUAL_EFFECTS = 'VISUAL_EFFECTS', 'Visual Effects'
+    WRITING_ADAPTED_SCREENPLAY = 'WRITING_ADAPTED_SCREENPLAY', 'Writing (Adapted Screenplay)'
+    WRITING_ORIGINAL_SCREENPLAY = 'WRITING_ORIGINAL_SCREENPLAY', 'Writing (Original Screenplay)'

@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 from django.contrib import admin
-from oscarquiz.inlines import QuizPlayerInline
-from oscarquiz.models import Quiz, Player, Nominee, Answer, QuizPlayer
+
+from .inlines import QuizPlayerInline
+from .models import Quiz, Player, Nominee, Answer, QuizPlayer
 
 
 @admin.register(Quiz)

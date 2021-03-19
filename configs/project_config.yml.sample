@@ -1,9 +1,0 @@
----
-base:
-  secret_key: ''
-database:
-  name: ''
-  user: ''
-  password: ''
-  host: ''
-  port: 5432

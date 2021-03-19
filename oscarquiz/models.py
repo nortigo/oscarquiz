@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 import uuid
 from django.db import models
 from django.urls.base import reverse
 from django.utils import timezone
-from oscarquiz.constants import CATEGORIES
+
+from .constants import Category
 
 
 class Quiz(models.Model):
@@ -44,7 +44,7 @@ class QuizPlayer(models.Model):
         unique_together = ('quiz', 'player')
 
     def __str__(self):
-        return '{}: {}'.format(self.quiz, self.player)
+        return f'{self.quiz}: {self.player}'
 
     def get_absolute_url(self):
         return reverse('quiz', kwargs={
@@ -53,11 +53,12 @@ class QuizPlayer(models.Model):
 
 
 class Nominee(models.Model):
-    oscar_quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    oscar_quiz = models.ForeignKey(
+        Quiz,
+        on_delete=models.CASCADE)
     category = models.CharField(
         max_length=255,
-        choices=CATEGORIES
-    )
+        choices=Category.choices)
     name = models.CharField(max_length=255)
     is_winner = models.BooleanField(default=False)
 
@@ -70,7 +71,7 @@ class Nominee(models.Model):
 
     @property
     def category_label(self):
-        return dict(CATEGORIES)[self.category]
+        return Category(self.category).label
 
 
 class Answer(models.Model):
@@ -80,8 +81,7 @@ class Answer(models.Model):
         on_delete=models.CASCADE)
     category = models.CharField(
         max_length=255,
-        choices=CATEGORIES
-    )
+        choices=Category.choices)
     nominee = models.ForeignKey(
         Nominee,
         null=True, blank=True,
@@ -100,4 +100,4 @@ class Answer(models.Model):
 
     @property
     def category_label(self):
-        return dict(CATEGORIES)[self.category]
+        return Category(self.category).label

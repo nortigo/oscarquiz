@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.forms import modelformset_factory
-from oscarquiz.models import Quiz, QuizPlayer, Answer
-from oscarquiz.forms import AnswerForm
-from oscarquiz.constants import CATEGORIES
+
+from .models import Quiz, QuizPlayer, Answer
+from .forms import AnswerForm
+from .constants import Category
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
     template_name = 'index.html'
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        context['quizzes'] = Quiz.objects.all()
-        return self.render_to_response(context=context)
+    model = Quiz
 
 
 class QuizView(TemplateView):
@@ -34,7 +31,7 @@ class QuizView(TemplateView):
 
         player = quiz_player.player
         answer_queryset = Answer.objects
-        category_count = len(CATEGORIES)
+        category_count = len(Category)
         answer_count = answer_queryset.filter(player=player).count()
         extra_field_count = category_count - answer_count
 
@@ -47,7 +44,7 @@ class QuizView(TemplateView):
         )
         initial = []
 
-        for category, _ in CATEGORIES:
+        for category in Category.values:
             try:
                 answer_queryset.get(
                     player=player,
@@ -79,7 +76,7 @@ class QuizView(TemplateView):
 
         player = quiz_player.player
         answer_queryset = Answer.objects
-        category_count = len(CATEGORIES)
+        category_count = len(Category)
         answer_count = answer_queryset.filter(player=player).count()
         extra_field_count = category_count - answer_count
 
@@ -92,7 +89,7 @@ class QuizView(TemplateView):
         )
         initial = []
 
-        for category, _ in CATEGORIES:
+        for category in Category.values:
             try:
                 answer_queryset.get(
                     player=player,
@@ -128,7 +125,7 @@ class ResultsView(TemplateView):
         ranking = queryset.values('player__name', 'score').order_by('-score')
 
         return self.render_to_response(context={
-            'categories': CATEGORIES,
+            'categories': Category.choices,
             'quiz': quiz,
             'ranking': ranking,
             'quiz_players': queryset.order_by('quiz_id', 'player__name')

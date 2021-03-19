@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from django.contrib.admin.options import StackedInline, TabularInline
-from oscarquiz.models import Nominee, QuizPlayer
+
+from .models import Nominee, QuizPlayer
 
 
 class QuizPlayerInline(TabularInline):

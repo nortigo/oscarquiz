@@ -1,12 +1,11 @@
 # -- folders
-/.idea
-/_static
-/_media
+.vscode
+.idea
+_static
+_media
 
 
 # -- files
+.env
 db.sqlite3
 *.pyc
-local_settings.py
-uwsgi.ini
-/configs/project_config.yml

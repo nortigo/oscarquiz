@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from django import forms
-from oscarquiz.models import Answer, Nominee
+
+from .models import Answer, Nominee
 
 
 class AnswerForm(forms.ModelForm):

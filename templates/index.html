@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                {% for quiz in quizzes %}
+                {% for quiz in object_list %}
                     <h1>{{ quiz.name }}</h1>
                     {% if quiz.is_past_due %}
                         <div class="alert alert-danger" role="alert">Answers are not allowed anymore.</div>

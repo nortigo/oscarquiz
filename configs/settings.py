@@ -1,17 +1,18 @@
-# -*- coding: utf-8 -*-
 import os
-from configs.utils import load_yml_config
+from environs import Env
+from pathlib import Path
 
-config = load_yml_config(os.environ.get('OSCARQUIZ_CONFIG', 'configs/project_config.yml'))
+env = Env()
+env.read_env()
 
 
 # -----------------------------------------------------------------
 # General settings
 # -----------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = config['base']['secret_key']
-DEBUG = False
-ALLOWED_HOSTS = []
+BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = env.str('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 
@@ -20,12 +21,19 @@ WSGI_APPLICATION = 'wsgi.application'
 # Applications
 # -----------------------------------------------------------------
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Vendors
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    # Apps
     'oscarquiz',
 ]
 
@@ -50,10 +58,10 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': False,
         'OPTIONS': {
-            'debug': False,
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -70,14 +78,7 @@ TEMPLATES = [
 # Database
 # -----------------------------------------------------------------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config['database']['name'],
-        'USER': config['database']['user'],
-        'PASSWORD': config['database']['password'],
-        'HOST': config['database']['host'],
-        'PORT': config['database']['port'],
-    },
+    'default': env.dj_db_url('DATABASE_URL'),
 }
 
 
@@ -94,21 +95,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # -----------------------------------------------------------------
 # Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
 # -----------------------------------------------------------------
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'America/New_York'
 USE_I18N = False
 USE_L10N = False
-USE_TZ = True
+USE_TZ = False
 
 
 # -----------------------------------------------------------------
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
 # -----------------------------------------------------------------
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '_static')
+STATIC_ROOT = BASE_DIR / '_static'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    str(BASE_DIR / 'static'),
 )

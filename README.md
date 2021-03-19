@@ -2,32 +2,36 @@
 
 ## Requirements
 
-* Python 3+
-* Django 3+
+* Python 3.8
+* Django 3
 * Database of your choice :)
 
 ## Setup
 
-Go to `configs/`
+1. Go to `configs/`
+1. Copy `.env.example` to `.env`
+1. Edit `.env` and add your own credential
 
-1. Copy `project_config.yml.sample` to `project_config.yml`
-1. Edit `project_config.yml` and add your own credential
-1. Copy `uwsgi.ini.sample` to `uwsgi.ini`
-1. Edit `uwsgi.ini` and set `OSCARQUIZ_CONFIG` path to YML config
-
-## Run project
+## Run docker
 
 ```bash
-$ OSCARQUIZ_CONFIG=/path/to/yml/configs python manage.py runserver
+docker-compose up -d
 ```
 
-You can ommit `OSCARQUIZ_CONFIG` If you keep `project_config.yml` in the configs folder.
+## Run project
 
 ```bash
 $ python manage.py runserver
 ```
 
 ## Changelog
+
+2021-03-18:
+
+* Add Pipenv and environs
+* Update requirements
+* Update settings
+* Add docker
 
 2020-02-21:
 
