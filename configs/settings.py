@@ -15,6 +15,7 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 # -----------------------------------------------------------------

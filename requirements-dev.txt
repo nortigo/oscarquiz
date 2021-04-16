@@ -6,19 +6,19 @@
 #
 
 -i https://pypi.org/simple
-asgiref==3.3.1; python_version >= '3.5'
+asgiref==3.3.4; python_version >= '3.6'
 backcall==0.2.0
-decorator==4.4.2
-django-debug-toolbar==3.2
-django==3.1.7
+decorator==5.0.7; python_version >= '3.5'
+django-debug-toolbar==3.2.1
+django==3.2
 ipdb==0.13.7
 ipython-genutils==0.2.0
-ipython==7.21.0
+ipython==7.22.0
 jedi==0.18.0; python_version >= '3.6'
-parso==0.8.1; python_version >= '3.6'
+parso==0.8.2; python_version >= '3.6'
 pexpect==4.8.0; sys_platform != 'win32'
 pickleshare==0.7.5
-prompt-toolkit==3.0.17; python_full_version >= '3.6.1'
+prompt-toolkit==3.0.18; python_full_version >= '3.6.1'
 ptyprocess==0.7.0
 pygments==2.8.1; python_version >= '3.5'
 pytz==2021.1
