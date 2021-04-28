@@ -1,5 +1,16 @@
 # Oscar Quiz
 
+Play with your friends by guessing which movies will be nominated during the Oscar.
+
+Rules are simple:
+1. Add the nominated movies/actors/directors/etc. for each category
+1. Add your friends
+1. Send a unique link to each of your friend
+1. Your friends guess the winner of each category before the Oscar ceremony
+1. Update the board every time a winner is revealed
+
+The winner is the person who has the most point.
+
 ## Requirements
 
 * Python 3.8
@@ -57,7 +68,7 @@ $ python manage.py runserver
 2018-06-05:
 
 * Replace self-hosted bootstrap to CDN
-* Update bootstrap to latest version
+* Update bootstrap to the latest version
 * Update HTML to fit new bootstrap version
 
 2018-03-03:
