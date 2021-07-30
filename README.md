@@ -37,7 +37,7 @@ $ python manage.py runserver
 
 ## Changelog
 
-2020-02-21:
+2021-07-30:
 
 * Update to Django 3.2.5
 
