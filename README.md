@@ -7,7 +7,7 @@ Rules are simple:
 1. Add your friends
 1. Send a unique link to each of your friend
 1. Your friends guess the winner of each category before the Oscar ceremony
-1. Update the board every time a winner is revealed
+1. Update the board every time a winner is being revealed.
 
 The winner is the person who has the most point.
 
@@ -36,6 +36,10 @@ $ python manage.py runserver
 ```
 
 ## Changelog
+
+2020-02-21:
+
+* Update to Django 3.2.5
 
 2021-03-18:
 
