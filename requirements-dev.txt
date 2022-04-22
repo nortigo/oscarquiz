@@ -10,7 +10,7 @@ asgiref==3.4.1; python_version >= '3.6'
 backcall==0.2.0
 decorator==5.0.9; python_version >= '3.5'
 django-debug-toolbar==3.2.1
-django==3.2.5
+django==3.2.13
 ipdb==0.13.9
 ipython-genutils==0.2.0
 ipython==7.25.0
