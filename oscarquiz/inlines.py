@@ -5,7 +5,9 @@ from .models import Nominee, QuizPlayer
 
 class QuizPlayerInline(TabularInline):
     model = QuizPlayer
-    readonly_fields = ['score', ]
+    readonly_fields = [
+        'score',
+    ]
     extra = 0
 
 

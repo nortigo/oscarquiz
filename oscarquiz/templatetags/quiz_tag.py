@@ -21,8 +21,8 @@ def display_answer(player, category):
             return name[:17] + '...' if len(name) > 20 else name
 
         return format_html(
-            '<span class="glyphicon glyphicon-star text-success"></span> {}',
-            answer_qs.nominee.name[:20])
+            '<span class="glyphicon glyphicon-star text-success"></span> {}', answer_qs.nominee.name[:20]
+        )
     except Answer.DoesNotExist:
         return '-'
 

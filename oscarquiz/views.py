@@ -22,9 +22,7 @@ class QuizView(TemplateView):
         context = self.get_context_data(**kwargs)
         identifier = kwargs.get('identifier')
 
-        quiz_player = get_object_or_404(
-            QuizPlayer,
-            identifier=identifier)
+        quiz_player = get_object_or_404(QuizPlayer, identifier=identifier)
 
         if quiz_player.quiz.expire_datetime < timezone.now():
             return HttpResponseForbidden('No more answers allowed')
@@ -36,30 +34,17 @@ class QuizView(TemplateView):
         extra_field_count = category_count - answer_count
 
         AnswerFormset = modelformset_factory(
-            Answer,
-            exclude=[],
-            form=AnswerForm,
-            extra=extra_field_count,
-            max_num=category_count
+            Answer, exclude=[], form=AnswerForm, extra=extra_field_count, max_num=category_count
         )
         initial = []
 
         for category in Category.values:
             try:
-                answer_queryset.get(
-                    player=player,
-                    category=category
-                )
+                answer_queryset.get(player=player, category=category)
             except Answer.DoesNotExist:
-                initial.append({
-                    'player': player,
-                    'category': category
-                })
+                initial.append({'player': player, 'category': category})
 
-        formset = AnswerFormset(
-            queryset=answer_queryset.filter(player=player),
-            initial=initial
-        )
+        formset = AnswerFormset(queryset=answer_queryset.filter(player=player), initial=initial)
 
         context['quiz'] = quiz_player.quiz
         context['answer_formset'] = formset
@@ -67,9 +52,7 @@ class QuizView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         identifier = kwargs.get('identifier')
-        quiz_player = get_object_or_404(
-            QuizPlayer,
-            identifier=identifier)
+        quiz_player = get_object_or_404(QuizPlayer, identifier=identifier)
 
         if quiz_player.quiz.is_past_due:
             return HttpResponseForbidden('No more answers allowed')
@@ -81,31 +64,17 @@ class QuizView(TemplateView):
         extra_field_count = category_count - answer_count
 
         AnswerFormset = modelformset_factory(
-            Answer,
-            exclude=[],
-            form=AnswerForm,
-            extra=extra_field_count,
-            max_num=category_count
+            Answer, exclude=[], form=AnswerForm, extra=extra_field_count, max_num=category_count
         )
         initial = []
 
         for category in Category.values:
             try:
-                answer_queryset.get(
-                    player=player,
-                    category=category
-                )
+                answer_queryset.get(player=player, category=category)
             except Answer.DoesNotExist:
-                initial.append({
-                    'player': player,
-                    'category': category
-                })
+                initial.append({'player': player, 'category': category})
 
-        formset = AnswerFormset(
-            queryset=answer_queryset.filter(player=player),
-            initial=initial,
-            data=request.POST
-        )
+        formset = AnswerFormset(queryset=answer_queryset.filter(player=player), initial=initial, data=request.POST)
 
         if formset.is_valid():
             formset.save()
@@ -124,9 +93,11 @@ class ResultsView(TemplateView):
         queryset = QuizPlayer.objects.filter(quiz=quiz)
         ranking = queryset.values('player__name', 'score').order_by('-score')
 
-        return self.render_to_response(context={
-            'categories': Category.choices,
-            'quiz': quiz,
-            'ranking': ranking,
-            'quiz_players': queryset.order_by('quiz_id', 'player__name')
-        })
+        return self.render_to_response(
+            context={
+                'categories': Category.choices,
+                'quiz': quiz,
+                'ranking': ranking,
+                'quiz_players': queryset.order_by('quiz_id', 'player__name'),
+            }
+        )

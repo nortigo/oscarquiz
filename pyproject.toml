@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "oscarquiz"
+version = "1.0.0"
+description = "Play with your friends by guessing which movies will be nominated during the Oscar."
+readme = "README.md"
+authors = ["Jonathan <jonathan@nortigo.com>"]
+classifiers = [
+    'Framework :: Django',
+    'Framework :: Django :: 3.2',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^3.2"
+django-filter = "*"
+djangorestframework = "*"
+environs = { version = "*", extras = ["django"] }
+ipython = "*"
+psycopg2 = "*"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+django-debug-toolbar = "*"
+flake8 = "*"
+ipdb = "*"
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+target-version = ['py38']
+# https://stackoverflow.com/questions/60381208/ignoring-django-migrations-in-pyproject-toml-file-for-black-formatter
+exclude = '''
+/(
+  migrations
+)/
+'''
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

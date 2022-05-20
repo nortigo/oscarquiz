@@ -6,13 +6,15 @@ from .models import Quiz, Player, Nominee, Answer, QuizPlayer
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    inlines = [QuizPlayerInline, ]
+    inlines = [
+        QuizPlayerInline,
+    ]
     list_display = ('name', 'expire_datetime')
 
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
 
 
 @admin.register(Nominee)
@@ -24,12 +26,9 @@ class NomineeAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         answer_queryset = Answer.objects
 
-        for qp in QuizPlayer.objects.filter(quiz=obj.oscar_quiz):
-            qp.score = answer_queryset.filter(
-                nominee__is_winner=True,
-                player=qp.player
-            ).count()
-            qp.save()
+        for qp in QuizPlayer.objects.filter(quiz=obj.oscar_quiz).iterator():
+            qp.score = answer_queryset.filter(nominee__is_winner=True, player=qp.player).count()
+            qp.save(update_fields=['score'])
 
 
 @admin.register(Answer)
@@ -39,5 +38,6 @@ class AnswerAdmin(admin.ModelAdmin):
 
     def get_category(self, obj):
         return obj.category_label
+
     get_category.short_description = 'Category'
     get_category.admin_order_field = 'category'

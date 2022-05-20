@@ -15,13 +15,15 @@ The winner is the person who has the most point.
 
 * Python 3.8
 * Django 3
-* Database of your choice :)
+* Postgresql or the database of your choice :)
 
 ## Setup
 
 1. Go to `configs/`
-1. Copy `.env.example` to `.env`
-1. Edit `.env` and add your own credential
+2. Copy `.env.example` to `.env`
+3. Edit `.env` and add your own credential
+4. Create virtual environment
+5. Run `poetry install`
 
 ## Run docker
 
@@ -36,6 +38,12 @@ $ python manage.py runserver
 ```
 
 ## Changelog
+
+2022-05-19:
+
+* Replace pipenv with poetry
+* Format code with black
+* Update packages
 
 2021-07-30:
 
