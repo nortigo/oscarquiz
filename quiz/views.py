@@ -7,7 +7,7 @@ from django.forms import modelformset_factory
 
 from .models import Quiz, QuizPlayer, Answer
 from .forms import AnswerForm
-from .constants import Category
+from .enums import Category
 
 
 class IndexView(ListView):
@@ -20,9 +20,8 @@ class QuizView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        identifier = kwargs.get('identifier')
 
-        quiz_player = get_object_or_404(QuizPlayer, identifier=identifier)
+        quiz_player = get_object_or_404(QuizPlayer, uuid=kwargs['uuid'])
 
         if quiz_player.quiz.expire_datetime < timezone.now():
             return HttpResponseForbidden('No more answers allowed')
@@ -51,8 +50,7 @@ class QuizView(TemplateView):
         return self.render_to_response(context=context)
 
     def post(self, request, *args, **kwargs):
-        identifier = kwargs.get('identifier')
-        quiz_player = get_object_or_404(QuizPlayer, identifier=identifier)
+        quiz_player = get_object_or_404(QuizPlayer, uuid=kwargs['uuid'])
 
         if quiz_player.quiz.is_past_due:
             return HttpResponseForbidden('No more answers allowed')

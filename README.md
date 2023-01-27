@@ -1,20 +1,25 @@
 # Oscar Quiz
 
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+
 Play with your friends by guessing which movies will be nominated during the Oscar.
 
+## How to play?
+
 Rules are simple:
+
 1. Add the nominated movies/actors/directors/etc. for each category
-1. Add your friends
-1. Send a unique link to each of your friend
-1. Your friends guess the winner of each category before the Oscar ceremony
-1. Update the board every time a winner is being revealed.
+2. Add your friends
+3. Send a unique link to each of your friend
+4. Your friends guess the winner of each category before the Oscar ceremony
+5. Update the board every time a winner is being revealed.
 
 The winner is the person who has the most point.
 
 ## Requirements
 
 * Python 3.8
-* Django 3
+* Django 4
 * Postgresql or the database of your choice :)
 
 ## Setup
@@ -22,10 +27,11 @@ The winner is the person who has the most point.
 1. Go to `configs/`
 2. Copy `.env.example` to `.env`
 3. Edit `.env` and add your own credential
-4. Create virtual environment
-5. Run `poetry install`
+4. Create virtual environment (you can use [pyenv](https://github.com/pyenv/pyenv))
+5. Install poetry
+6. Run `poetry install`
 
-## Run docker
+## Run the database on docker
 
 ```bash
 docker-compose up -d
@@ -37,7 +43,17 @@ docker-compose up -d
 $ python manage.py runserver
 ```
 
+## Checkout Oscar Quiz SPA project
+
+[https://github.com/nortigo/oscarquiz_app](https://github.com/nortigo/oscarquiz_app)
+
 ## Changelog
+
+2023-01-31:
+
+* Update to Django 4.1.5
+* Migrate to Restful API
+* Remove all templates
 
 2022-05-19:
 
