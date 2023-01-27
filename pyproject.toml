@@ -1,21 +1,24 @@
 [tool.poetry]
 name = "oscarquiz"
-version = "1.0.0"
+version = "2.0.0"
 description = "Play with your friends by guessing which movies will be nominated during the Oscar."
 readme = "README.md"
 authors = ["Jonathan <jonathan@nortigo.com>"]
 classifiers = [
     'Framework :: Django',
-    'Framework :: Django :: 3.2',
+    'Framework :: Django :: 4',
+    'Framework :: Django :: 4.1',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.8',
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django = "^3.2"
+django = "^4"
+django-cors-headers = "*"
 django-filter = "*"
 djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 environs = { version = "*", extras = ["django"] }
 ipython = "*"
 psycopg2 = "*"

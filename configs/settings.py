@@ -3,7 +3,7 @@ from environs import Env
 from pathlib import Path
 
 env = Env()
-env.read_env()
+env.read_env(os.environ.get('OSCARQUIZ_ENV_PATH', None))
 
 
 # -----------------------------------------------------------------
@@ -29,13 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Vendors
     'rest_framework',
-    'rest_framework.authtoken',
-
+    'corsheaders',
     # Apps
-    'oscarquiz',
+    'quiz',
+    'account',
 ]
 
 
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
 # Middlewares
 # -----------------------------------------------------------------
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,19 +54,28 @@ MIDDLEWARE = [
 
 
 # -----------------------------------------------------------------
+# Django Rest Framework
+# -----------------------------------------------------------------
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': env.list(
+        'DRF_AUTHENTICATION_CLASSES', default='rest_framework_simplejwt.authentication.JWTAuthentication'
+    ),
+    'DEFAULT_RENDERER_CLASSES': env.list('DRF_RENDER_CLASSES', default='rest_framework.renderers.JSONRenderer'),
+    'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
+}
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+
+
+# -----------------------------------------------------------------
 # Templates
 # -----------------------------------------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
-            'debug': DEBUG,
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -87,10 +96,18 @@ DATABASES = {
 # Password validation
 # -----------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 
@@ -108,7 +125,4 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # -----------------------------------------------------------------
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / '_static'
-STATICFILES_DIRS = (
-    str(BASE_DIR / 'static'),
-)
+STATIC_ROOT = env.str('STATIC_ROOT', default=str(BASE_DIR / '_static'))
