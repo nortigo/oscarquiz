@@ -42,6 +42,13 @@ class Player(models.Model):
     def name(self):
         return self.user.get_full_name() or self.user.username
 
+    @classmethod
+    def update_score(cls, quiz):
+        answer_queryset = Answer.objects
+        for player in cls.objects.filter(quiz=quiz).iterator():
+            player.score = answer_queryset.filter(nominee__is_winner=True, player=player).count()
+            player.save(update_fields=['score'])
+
 
 class Nominee(models.Model):
     quiz = models.ForeignKey(Quiz, related_name='nominees', on_delete=models.CASCADE)

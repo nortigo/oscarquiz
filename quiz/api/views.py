@@ -1,8 +1,9 @@
 from django.http import Http404
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.decorators import action
 
 from .serializers import (
@@ -10,8 +11,9 @@ from .serializers import (
     PlayerSerializer,
     CategoryNomineesSerializer,
     AnswerSerializer,
+    NomineeSerializer,
 )
-from ..models import Quiz, Answer, Player
+from ..models import Quiz, Answer, Player, Nominee
 
 
 class QuizViewSet(ReadOnlyModelViewSet):
@@ -51,18 +53,10 @@ class QuizViewSet(ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class AnswerViewSet(CreateModelMixin, UpdateModelMixin, GenericViewSet):
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-
+class QuizMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.quiz = None
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset.filter(player__quiz=self.quiz)
-        return queryset
 
     def init_quiz(self, request):
         try:
@@ -78,7 +72,41 @@ class AnswerViewSet(CreateModelMixin, UpdateModelMixin, GenericViewSet):
         self.init_quiz(request)
         return super().update(request, pk, *args, **kwargs)
 
+
+class AnswerViewSet(QuizMixin, CreateModelMixin, UpdateModelMixin, GenericViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset.filter(player__quiz=self.quiz)
+        return queryset
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['quiz'] = self.quiz
         return context
+
+
+class NomineeViewSet(QuizMixin, GenericViewSet):
+    permission_classes = [IsAdminUser]
+    queryset = Nominee.objects.all()
+    serializer_class = NomineeSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset.filter(quiz=self.quiz)
+        return queryset
+
+    @action(detail=True, methods=['patch'])
+    def winner(self, request, pk=None):
+        self.init_quiz(request)
+        instance: Nominee = self.get_object()
+        instance.is_winner = True
+        instance.save(update_fields=['is_winner'])
+        Nominee.objects.filter(quiz=instance.quiz, category=instance.category).exclude(pk=instance.pk).update(
+            is_winner=False
+        )
+        Player.update_score(quiz=self.quiz)
+        serializer = NomineeSerializer(instance=instance)
+        return Response(serializer.data)
