@@ -13,6 +13,7 @@ from .serializers import (
     AnswerSerializer,
     NomineeSerializer,
 )
+from ..enums import Category
 from ..models import Quiz, Answer, Player, Nominee
 
 
@@ -40,6 +41,15 @@ class QuizViewSet(ReadOnlyModelViewSet):
                     'label': nominee.category_label,
                     'nominees': [nominee],
                 }
+
+        diff = set(Category.values) - set(data.keys())
+
+        for category in diff:
+            data[category] = {
+                'value': category,
+                'label': Category(category).label,
+                'nominees': [],
+            }
 
         serializer = CategoryNomineesSerializer(data.values(), many=True)
         return Response(serializer.data)
