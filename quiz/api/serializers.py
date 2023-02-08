@@ -1,4 +1,4 @@
-from rest_framework.fields import SerializerMethodField, CharField, IntegerField
+from rest_framework.fields import SerializerMethodField, CharField, IntegerField, empty
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from ..models import Quiz, Player, Nominee, Answer
@@ -26,7 +26,8 @@ class PlayerSerializer(ModelSerializer):
 class NomineeSerializer(ModelSerializer):
     class Meta:
         model = Nominee
-        fields = ['id', 'name', 'is_winner']
+        fields = ['id', 'name', 'is_winner', 'quiz', 'category']
+        extra_kwargs = {'quiz': {'write_only': True}, 'category': {'write_only': True}}
 
 
 class CategoryNomineesSerializer(Serializer):

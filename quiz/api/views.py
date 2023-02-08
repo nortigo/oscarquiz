@@ -3,6 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.decorators import action
 
@@ -96,6 +97,33 @@ class AnswerViewSet(QuizMixin, CreateModelMixin, UpdateModelMixin, GenericViewSe
         context = super().get_serializer_context()
         context['quiz'] = self.quiz
         return context
+
+
+class NomineesView(QuizMixin, APIView):
+    def post(self, request, *args, **kwargs):
+        self.init_quiz(request)
+        serializers = []
+        queryset = Nominee.objects
+        category = request.GET['category']
+
+        for data in request.data:
+            try:
+                instance = get_object_or_404(queryset, quiz=self.quiz, id=data['id'], category=category)
+            except KeyError:
+                instance = None
+            serializer = NomineeSerializer(instance=instance, data={
+                'quiz': self.quiz.pk,
+                'category': category,
+                'name': data['name']
+            })
+            serializer.is_valid(raise_exception=True)
+            # Skip save() here. We don't want to save all data if there is an error.
+            serializers.append(serializer)
+
+        for serializer in serializers:
+            serializer.save()
+
+        return Response([s.data for s in serializers])
 
 
 class NomineeViewSet(QuizMixin, GenericViewSet):
