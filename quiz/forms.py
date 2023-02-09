@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext as _
 
-from .models import Answer, Nominee
+from .models import Answer
 
 
 class AnswerAdminForm(forms.ModelForm):

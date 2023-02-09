@@ -1,4 +1,4 @@
-from rest_framework.fields import SerializerMethodField, CharField, IntegerField, empty
+from rest_framework.fields import SerializerMethodField, CharField, IntegerField
 from rest_framework.serializers import ModelSerializer, Serializer
 
 from ..models import Quiz, Player, Nominee, Answer

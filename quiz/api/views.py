@@ -1,6 +1,5 @@
 from django.http import Http404
 from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -69,39 +68,36 @@ class QuizMixin:
         super().__init__(*args, **kwargs)
         self.quiz = None
 
-    def init_quiz(self, request):
+    def init_quiz(self, quiz_id):
         try:
-            self.quiz = Quiz.objects.get(pk=self.request.GET['qid'])
-        except (KeyError, Quiz.DoesNotExist):
+            self.quiz = Quiz.objects.get(pk=quiz_id)
+        except Quiz.DoesNotExist:
             raise Http404()
 
     def create(self, request, *args, **kwargs):
-        self.init_quiz(request)
+        self.init_quiz(request.GET['qid'])
         return super().create(request, *args, **kwargs)
 
     def update(self, request, pk=None, *args, **kwargs):
-        self.init_quiz(request)
+        self.init_quiz(request.GET['qid'])
         return super().update(request, pk, *args, **kwargs)
 
 
-class AnswerViewSet(QuizMixin, CreateModelMixin, UpdateModelMixin, GenericViewSet):
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset.filter(player__quiz=self.quiz)
-        return queryset
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['quiz'] = self.quiz
-        return context
+class AnswerView(QuizMixin, APIView):
+    def post(self, request, *args, **kwargs):
+        self.init_quiz(request.data['quiz'])
+        nominee = Nominee.objects.get(quiz=self.quiz, pk=request.data['nominee_id'])
+        player = Player.objects.get(quiz=self.quiz, user=request.user)
+        answer, created = Answer.objects.get_or_create(player=player, nominee=nominee)
+        # Delete old answer from same category
+        Answer.objects.filter(player=player, nominee__category=nominee.category).exclude(nominee=nominee).delete()
+        serializer = AnswerSerializer(instance=answer, context={'request': request})
+        return Response(serializer.data)
 
 
 class NomineesView(QuizMixin, APIView):
     def post(self, request, *args, **kwargs):
-        self.init_quiz(request)
+        self.init_quiz(request.GET['qid'])
         serializers = []
         queryset = Nominee.objects
         category = request.GET['category']
@@ -111,11 +107,9 @@ class NomineesView(QuizMixin, APIView):
                 instance = get_object_or_404(queryset, quiz=self.quiz, id=data['id'], category=category)
             except KeyError:
                 instance = None
-            serializer = NomineeSerializer(instance=instance, data={
-                'quiz': self.quiz.pk,
-                'category': category,
-                'name': data['name']
-            })
+            serializer = NomineeSerializer(
+                instance=instance, data={'quiz': self.quiz.pk, 'category': category, 'name': data['name']}
+            )
             serializer.is_valid(raise_exception=True)
             # Skip save() here. We don't want to save all data if there is an error.
             serializers.append(serializer)
@@ -138,7 +132,7 @@ class NomineeViewSet(QuizMixin, GenericViewSet):
 
     @action(detail=True, methods=['patch'])
     def winner(self, request, pk=None):
-        self.init_quiz(request)
+        self.init_quiz(request.GET['qid'])
         instance: Nominee = self.get_object()
         instance.is_winner = True
         instance.save(update_fields=['is_winner'])
