@@ -3,7 +3,7 @@ name: Validate Code
 on: [push]
 
 jobs:
-  lint:
+  black:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,3 +11,17 @@ jobs:
         with:
           options: "--check --verbose"
           src: "."
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.16
+      - name: Install pip
+        run: python -m pip install --upgrade pip
+      - name: Install flake8
+        run: pip install flake8
+      - name: Run flake8
+        run: flake8 . --count --exit-zero --statistics
