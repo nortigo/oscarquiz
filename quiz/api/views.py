@@ -3,9 +3,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet, mixins
 from rest_framework.decorators import action
 
+from .permissions import AdminHasWritePermission
 from .serializers import (
     QuizSerializer,
     PlayerSerializer,
@@ -17,9 +18,16 @@ from ..enums import Category
 from ..models import Quiz, Answer, Player, Nominee
 
 
-class QuizViewSet(ReadOnlyModelViewSet):
+class QuizViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+    permission_classes = [AdminHasWritePermission]
 
     @action(detail=True, methods=['get'])
     def players(self, request, pk=None):
